@@ -1,0 +1,34 @@
+<script>
+$(function(){
+  var m = '<%= flash[:notice] if flash[:notice] %>'
+  var t = function(){
+    var date = new Date();
+    $(".time").text(date.getFullYear()  + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+  };
+
+  t();
+  setInterval(t, 1000);
+  if (m != '') {
+    alert(m);
+  }
+})
+</script>
+
+<h1>ICカード勤怠管理</h1>
+
+<h2>ただいま <span class="time"></span></h2>
+
+<h3>SuicaやPasmo（Felica準拠ICカード）をPaSoriの上に置いて、どれかのボタンを押して下さい。</h3>
+
+<table>
+  <tr>
+    <td><%= button_to "出勤", {:action => "scan", :kind => 1} %></td>
+    <td><%= button_to "退勤", {:action => "scan", :kind => 2} %></td>
+  </tr>
+  <tr>
+    <td><%= button_to "外出", {:action => "scan", :kind => 11} %></td>
+    <td><%= button_to "帰社", {:action => "scan", :kind => 12} %></td>
+  </tr>
+</table>
+
+<br />

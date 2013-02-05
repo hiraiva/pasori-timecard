@@ -1,0 +1,13 @@
+<%= form_tag("/timecard/scan") do |f| %>
+  <%= hidden_field_tag "idm", @idm %>
+  <%= hidden_field_tag "kind", @kind %>
+
+  <div class="field">
+    名前：<br />
+    <%= text_field_tag "name", @name %>
+  </div>
+
+  <div class="actions">
+    <%= submit_tag "登録" %>
+  </div>
+<% end %>

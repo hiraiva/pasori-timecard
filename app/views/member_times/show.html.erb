@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Member:</b>
+  <%= @member_time.member_id %>
+</p>
+
+<p>
+  <b>Type:</b>
+  <%= @member_time.kind %>
+</p>
+
+<p>
+  <b>Created at:</b>
+  <%= @member_time.created_at %>
+</p>
+
+
+<%= link_to 'Edit', edit_member_time_path(@member_time) %> |
+<%= link_to 'Back', member_times_path %>
