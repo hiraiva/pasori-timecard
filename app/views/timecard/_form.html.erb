@@ -4,7 +4,8 @@
 
   <div class="field">
     名前：<br />
-    <%= text_field_tag "name", @name %>
+    <%= text_field_tag "name", @name, {:style => 'width: 10em;', :maxlength => '50'} %>
+    <p style="font-size: 0.5em;">idm:<%= @idm %></p>
   </div>
 
   <div class="actions">

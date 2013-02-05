@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require "pasori"
+require "time"
 
 class TimecardController < ApplicationController
   def index
@@ -19,6 +20,7 @@ class TimecardController < ApplicationController
       @member.save
     else
       @idm = scan_idm
+      
       if (@idm.blank?)
         flash[:notice] = "ICカードの読み取りに失敗しました"
         redirect_to :action => "index"
@@ -37,20 +39,36 @@ class TimecardController < ApplicationController
         format.html # scan.html.erb
       end
     else
-      MemberTime.create({:member_id => @member.id, :kind => @kind})
+      member_time = MemberTime.create({:member_id => @member.id, :kind => @kind})
 
+      name = @member.name.force_encoding('utf-8')
       case @kind.to_i
       when 1
-        mes = @member.name + " さん、おはようございます！"
+        mes = name + " さん、おはようございます！"
       when 2
-        mes = @member.name + " さん、お疲れ様でした！"
+        last_member_time = MemberTime.find(:first, :conditions => ["member_id = ? AND (kind = 1 OR kind = 21)", @member.id], :order => "created_at DESC")
+        if (last_member_time.present?)
+          costed_time = (member_time.created_at - last_member_time.created_at).to_i
+          mes = name + " さん、お疲れ様でした！"
+          mes_sub = "勤務時間は " + (costed_time / 3600).to_s + "時間" + (costed_time % 3600 / 60).to_s + "分 です"
+        else
+          mes = name + " さん、お疲れ様でした！"
+        end
       when 11
-        mes = @member.name + " さん、いってらっしゃい！"
+        mes = name + " さん、いってらっしゃい！"
       when 12
-        mes = @member.name + " さん、おかえりなさい！"
+        last_member_time = MemberTime.find(:first, :conditions => ["member_id = ? AND kind = 11", @member.id], :order => "created_at DESC")
+        if (last_member_time.present?)
+          costed_time = (member_time.created_at - last_member_time.created_at).to_i
+          mes = name + " さん、おかえりなさい！"
+          mes_sub = "外出時間は " + (costed_time / 3600).to_s + "時間" + (costed_time % 3600 / 60).to_s + "分 です"
+        else
+          mes = name + " さん、おかえりなさい！"
+        end
       end
 
-      flash[:notice] = mes
+      flash[:mes] = mes
+      flash[:mes_sub] = mes_sub if (mes_sub.present?)
       redirect_to :action => "index"
     end
   end
@@ -64,12 +82,14 @@ class TimecardController < ApplicationController
           felica = pasori.felica_polling(Felica::POLLING_IRUCA)
         end
 
-        return "" if (felica.blank?)
-
-        return felica.idm.unpack("H").join("").force_encoding('utf-8')
+        if (felica.present?)
+          return felica.idm.unpack("H*").join("").force_encoding('utf-8')
+        else
+          return nil
+        end
       }
     rescue
-      return ""
+      return nil
     end
   end
 end

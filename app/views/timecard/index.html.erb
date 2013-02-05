@@ -1,6 +1,7 @@
 <script>
 $(function(){
-  var m = '<%= flash[:notice] if flash[:notice] %>'
+  var mes = '<%= flash[:mes] if flash[:mes] %>';
+  var mes_sub = '<%= flash[:mes_sub] if flash[:mes_sub] %>';
   var t = function(){
     var date = new Date();
     $(".time").text(date.getFullYear()  + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
@@ -8,8 +9,8 @@ $(function(){
 
   t();
   setInterval(t, 1000);
-  if (m != '') {
-    alert(m);
+  if (mes != '') {
+    alert((mes_sub) ? mes + '\n' + mes_sub : mes);
   }
 })
 </script>
@@ -18,7 +19,8 @@ $(function(){
 
 <h2>ただいま <span class="time"></span></h2>
 
-<h3>SuicaやPasmo（Felica準拠ICカード）をPaSoriの上に置いて、どれかのボタンを押して下さい。</h3>
+<h3>SuicaやPasmo（Felica準拠ICカード）をICカードリーダー（PaSoRi）の上に置いて、<br />
+どれかのボタンを押して下さい。</h3>
 
 <table>
   <tr>
@@ -29,6 +31,12 @@ $(function(){
     <td><%= button_to "外出", {:action => "scan", :kind => 11} %></td>
     <td><%= button_to "帰社", {:action => "scan", :kind => 12} %></td>
   </tr>
+<!--
+  <tr>
+   <td><%= button_to "直行", {:action => "scan", :kind => 21} %></td>
+   <td><%= button_to "直帰", {:action => "scan", :kind => 22} %></td>
+  </tr>
+-->
 </table>
 
 <br />
