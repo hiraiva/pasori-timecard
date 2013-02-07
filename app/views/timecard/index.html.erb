@@ -1,7 +1,7 @@
 <script>
 $(function(){
-  var mes = '<%= flash[:mes] if flash[:mes] %>';
-  var mes_sub = '<%= flash[:mes_sub] if flash[:mes_sub] %>';
+  var mes = '<%= h(flash[:mes]) if flash[:mes] %>';
+  var mes_sub = '<%= h(flash[:mes_sub]) if flash[:mes_sub] %>';
   var t = function(){
     var date = new Date();
     $(".time").text(date.getFullYear()  + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
@@ -37,6 +37,9 @@ $(function(){
    <td><%= button_to "直帰", {:action => "scan", :kind => 22} %></td>
   </tr>
 -->
+  <tr>
+    <td colspan="2"><%= button_to "直近の勤怠状況", {:action => "list"}, {:style => "font-size: 4em; width: 100%;"} %></td>
+  </tr>
 </table>
 
 <br />

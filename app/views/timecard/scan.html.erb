@@ -1,5 +1,32 @@
-<h1>ICカードの登録</h1>
+<script>
+$(function(){
+  var t = function(){
+    if (this.__counter == undefined) {
+      this.__counter = 10;
+    }
+    $('.last_sec').text(this.__counter);
+    this.__counter -= 1;
+    if (this.__counter <= 0) {
+      location.href = '/';
+    }
+  };
+  t();
+  var timerId = setInterval(t, 1000);
 
-<h3>あたらしいカードです。あなたの名前を入力して下さい。</h3>
+  $('.sustain').click(function(evt){
+    clearInterval(timerId);
+    $(evt.target).closest('h3').html('<a href="/">戻る</a>')
+  });
+})
+</script>
 
-<%= render 'form' %>
+<h1><%= h(@mes) %></h1>
+<% if (@mes_sub.present?) %><h2><%= h(@mes_sub) %></h2><% end %>
+
+<h3><span class="last_sec"></span> 秒後にICカード読み取り画面へ戻ります。<a href="javascript:void(0);" class="sustain">このままの画面を維持</a></h3>
+
+<hr />
+
+<h2>直近の勤怠状況</h2>
+
+<%= render "shared/times" %>
